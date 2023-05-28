@@ -927,10 +927,12 @@ EOF
 
 
 def _canonical_tag(label: str, tag_str: str):
-    pkg, name = decompose(label)
-    tagged_name = tag(name, tag_str)
-    if pkg == "":
-        return canonicalise(f":{tagged_name}")
-    if label.startswith("///") or label.startswith("@"):
-        return f"@{pkg}:{tagged_name}"
-    return f"//{pkg}:{tagged_name}"
+    label_parts = label.split(":")
+    pkg = label_parts[0]
+    name = label_parts[1]
+
+    new_name = f"_{name}#{tag_str}"
+
+    new_label = ":".join([pkg, new_name])
+
+    return canonicalise(new_label)
